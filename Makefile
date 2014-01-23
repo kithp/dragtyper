@@ -2,7 +2,7 @@ JAVAC=javac
 sources = $(wildcard *.java)
 classes = $(sources:.java=.class)
 
-run: Main.class DragTyper.class
+run: Main.class DragTyper.class DragTyperGui.class KeyboardPanel.class
 	java Main
 
 all: $(classes)
