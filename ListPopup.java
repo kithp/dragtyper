@@ -4,11 +4,12 @@ import java.awt.*;
 
 public class ListPopup extends JFrame{
 
-	private String[] data; 
-	private JList list;
+	private String[] data; //the array of possible string matches
+	private JList list;    //where the matches are displayed
 	private JTextArea area; //where to write to
 
 	public ListPopup(String[] v, JTextArea a){
+		//don't do anything if there are no matches
 		if (v.length < 1)
 			return;
 
@@ -19,6 +20,8 @@ public class ListPopup extends JFrame{
 		MouseAdapter mouseListener = new MouseAdapter() {
 		  public void mouseClicked(MouseEvent mouseEvent) {
 			JList list = (JList) mouseEvent.getSource();
+			//right mouse button
+			//process the currently highlighted word
 			if ((mouseEvent.getModifiers() & InputEvent.BUTTON3_MASK) == InputEvent.BUTTON3_MASK) {
 			  int index = list.getSelectedIndex();
 			  if (index >= 0) {
@@ -32,6 +35,8 @@ public class ListPopup extends JFrame{
 				//list.getParent().close();
 			  }
 			}
+			//left mouse button
+			//select and processes the chosen word
 			if ((mouseEvent.getModifiers() & InputEvent.BUTTON1_MASK) == InputEvent.BUTTON1_MASK) {
 			  int index = list.getSelectedIndex();
 			  if (index >= 0) {

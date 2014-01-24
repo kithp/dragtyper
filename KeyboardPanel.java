@@ -21,9 +21,8 @@ public class KeyboardPanel extends JPanel
 
     private BufferedImage image;
 	private Robot robot;
-	private Color currentColor;
 	private Character currentCharacter;
-	private Map<Color, Character> colorCharMap;
+	private Map<Color, Character> colorCharMap;  
 	private DragTyper dragTyper;
 	private JTextArea writeArea;  //where to draw the result
 	private String currentDragSet;
@@ -69,8 +68,10 @@ public class KeyboardPanel extends JPanel
     public void keyReleased(KeyEvent e) {
     }
 
-    public void mouseMoved(MouseEvent e) {
-       this.requestFocus();
+
+	public void mouseMoved(MouseEvent e) {
+    	//this is necessary to be able to handle mouse events in the panel
+		this.requestFocus();
     }
 
 	void processMouse(MouseEvent e){
@@ -89,7 +90,6 @@ public class KeyboardPanel extends JPanel
 			//System.out.println("Red   = " + color.getRed());
 			//System.out.println("Green = " + color.getGreen());
 			//System.out.println("Blue  = " + color.getBlue());
-			currentColor = color;
 			currentCharacter = c;
 			currentDragSet += c;
 		}
@@ -104,6 +104,14 @@ public class KeyboardPanel extends JPanel
     }
 
     public void mouseReleased(MouseEvent e) {
+		//if the right mouse button is released
+		//deleted a character and return
+		if ((e.getModifiers() & InputEvent.BUTTON3_MASK) == InputEvent.BUTTON3_MASK){
+			String text = writeArea.getText();
+			if (text != null && text.length() > 1)
+				writeArea.setText(text.substring(0, text.length()-1));
+			return;
+		}
 	    System.out.println("drag set: " + currentDragSet);
         //System.out.println("Mouse released; # of clicks: " + e.getClickCount());
 		if (currentDragSet.length() == 0)
@@ -112,8 +120,9 @@ public class KeyboardPanel extends JPanel
 			//if its a single character, write it out wihtout a space
 			if (currentDragSet.length() == 1){
 				writeArea.setText(writeArea.getText() + currentDragSet);
-			} 
-			else{  //if it's more than one character, look up it's matches
+			}
+			//if it's more than one character, look up it's matches
+			else{  
 				ArrayList<String> matches = dragTyper.getMatches(currentDragSet);
 				String[] choices = matches.toArray(new String[matches.size()]);
 				callPopup(choices);
@@ -174,6 +183,16 @@ public class KeyboardPanel extends JPanel
 		colorCharMap = new HashMap<Color, Character>();
 		currentDragSet = new String();
 
+
+		this.addMouseListener(this);
+		this.addMouseMotionListener(this);
+		this.addKeyListener(this);
+
+		//colors to keys
+		loadDefaultMap();
+
+
+		//try loading the picture of the keyboard
         try {                
         	image = ImageIO.read(new File(imageFile));
         } catch (IOException ex) {
@@ -182,20 +201,13 @@ public class KeyboardPanel extends JPanel
              // handle exception...
         }
 
+		//try setting up the robot that handles mouse position
 		try{ 
 			robot = new Robot();
 		}catch(AWTException e){
 			System.out.println("awte");
 			e.printStackTrace();
 		}
-
-		this.addMouseListener(this);
-		this.addMouseMotionListener(this);
-		this.addKeyListener(this);
-		currentColor = new Color(0, 0, 0);
-
-		loadDefaultMap();
-
     }
 
 

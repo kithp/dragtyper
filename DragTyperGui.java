@@ -17,9 +17,9 @@ import java.awt.datatransfer.StringSelection;
 public class DragTyperGui extends JPanel
 {
 
-	private JTextArea textArea;
-	private KeyboardPanel keyboardPanel;
-	private JButton copyButton;
+	private JTextArea textArea;  //place the the text is written
+	private KeyboardPanel keyboardPanel;  //place to interact with the keys
+	private JButton copyButton;  //copy results to system clipboard
 
 
 	public DragTyperGui(){
