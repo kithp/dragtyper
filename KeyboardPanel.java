@@ -70,9 +70,30 @@ public class KeyboardPanel extends JPanel
        this.requestFocus();
     }
 
+	void processMouse(MouseEvent e){
+		PointerInfo pointer = MouseInfo.getPointerInfo();
+		Point coord = pointer.getLocation();	
+		Color color = robot.getPixelColor(coord.x, coord.y);
+		Character c = colorCharMap.get(color);
+		//empty dragset
+		if (c != null && currentDragSet.equals("")){
+			currentColor = color;
+			currentCharacter = c;
+			currentDragSet += c;
+		}
+		if (c != null && c != currentCharacter && c != ' '){
+			System.out.println("Red   = " + color.getRed());
+			System.out.println("Green = " + color.getGreen());
+			System.out.println("Blue  = " + color.getBlue());
+			currentColor = color;
+			currentCharacter = c;
+			currentDragSet += c;
+		}
+	}
     public void mouseDragged(MouseEvent e) {
 		//System.out.println("Mouse dragged"+  e.getX() + ", " + e.getY());
-
+		processMouse(e);
+		/*
 		PointerInfo pointer = MouseInfo.getPointerInfo();
 		Point coord = pointer.getLocation();	
 		Color color = robot.getPixelColor(coord.x, coord.y);
@@ -86,9 +107,11 @@ public class KeyboardPanel extends JPanel
 			currentCharacter = c;
 			currentDragSet += c;
 		}
+		*/
     }
 
     public void mousePressed(MouseEvent e) {
+	   processMouse(e);
        System.out.println("Mouse pressed; # of clicks: "
                     + e.getClickCount());
     }
@@ -97,21 +120,28 @@ public class KeyboardPanel extends JPanel
 	    System.out.println("drag set: " + currentDragSet);
         System.out.println("Mouse released; # of clicks: "
                     + e.getClickCount());
-
+		if (currentDragSet.length() == 0)
+			return;
 		try{	
 			//dragTyper.test1(currentDragSet);
-			ArrayList<String> matches = dragTyper.getMatches(currentDragSet);
-			String[] choices = matches.toArray(new String[matches.size()]);
-			String input = (String) JOptionPane.showInputDialog(null, "Choose now...",
-				"The Choice of a Lifetime", JOptionPane.QUESTION_MESSAGE, null,
-				choices, // Array of choices
-				choices[0]); // Initial choice
-			System.out.println(input);
-			writeArea.setText(writeArea.getText() + " " + input);
+			if (currentDragSet.length() == 1){
+				writeArea.setText(writeArea.getText() + currentDragSet);
+			}
+			else{
+				ArrayList<String> matches = dragTyper.getMatches(currentDragSet);
+				String[] choices = matches.toArray(new String[matches.size()]);
+				callPopup(choices);
+			}
+			//String input = (String) JOptionPane.showInputDialog(null, "Choose now...",
+			//	"The Choice of a Lifetime", JOptionPane.QUESTION_MESSAGE, null,
+			//	choices, // Array of choices
+			//	choices[0]); // Initial choice
+			//System.out.println(input);
+			//writeArea.setText(writeArea.getText() + " " + input);
 			
 		} catch(Exception ex){
 			System.out.println("error in dragtyper");
-			//ex.printStackTrace();
+			ex.printStackTrace();
 		} finally{
 			currentDragSet = "";
 		}
@@ -129,6 +159,20 @@ public class KeyboardPanel extends JPanel
        System.out.println("Mouse clicked (# of clicks: "
                     + e.getClickCount() + ")");
     }
+
+
+	public void callPopup(String[] data){
+		JFrame frame = new ListPopup(data, writeArea);
+		frame.setUndecorated(true);
+		frame.pack();
+		frame.setVisible(true);
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+		Point location = MouseInfo.getPointerInfo().getLocation(); 
+		int x = (int) location.getX();
+		int y = (int) location.getY();
+		frame.setLocation(x, y);
+	}
 
 
 	private void loadDefaultMap(){
@@ -174,14 +218,6 @@ public class KeyboardPanel extends JPanel
 		loadDefaultMap();
 
     }
-
-
-
-
-
-
-
-
 
 
 
