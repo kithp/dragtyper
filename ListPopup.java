@@ -22,11 +22,11 @@ public class ListPopup extends JFrame{
 			JList list = (JList) mouseEvent.getSource();
 			//right mouse button
 			//process the currently highlighted word
-			if ((mouseEvent.getModifiers() & InputEvent.BUTTON3_MASK) == InputEvent.BUTTON3_MASK) {
+			//if ((mouseEvent.getModifiers() & InputEvent.BUTTON3_MASK) == InputEvent.BUTTON3_MASK) {
 			  int index = list.getSelectedIndex();
 			  if (index >= 0) {
 				if (area != null)
-					area.setText(area.getText() + " " + list.getSelectedValue());
+					area.setText(area.getText() + list.getSelectedValue() + " ");
 				System.out.println("right-clicked on : " + list.getSelectedValue() );
 				//try to close the window
 				//list.getTopLevelAncenstor().dispose();
@@ -34,14 +34,15 @@ public class ListPopup extends JFrame{
 				parent.dispose();
 				//list.getParent().close();
 			  }
-			}
+			//}
 			//left mouse button
 			//select and processes the chosen word
+			/*
 			if ((mouseEvent.getModifiers() & InputEvent.BUTTON1_MASK) == InputEvent.BUTTON1_MASK) {
 			  int index = list.getSelectedIndex();
 			  if (index >= 0) {
 				if (area != null)
-					area.setText(area.getText() + " " + list.getSelectedValue());
+					area.setText(area.getText() + list.getSelectedValue() + " " );
 				System.out.println("left-clicked on : " + list.getSelectedValue() );
 				//try to close the window
 				//list.getTopLevelAncenstor().dispose();
@@ -50,6 +51,7 @@ public class ListPopup extends JFrame{
 				//list.getParent().close();
 			  }
 			}
+			*/
 		  }
 			public void mouseWheelMoved(MouseWheelEvent mouseEvent) {
 				JList list = (JList) mouseEvent.getSource();

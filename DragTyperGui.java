@@ -20,6 +20,7 @@ public class DragTyperGui extends JPanel
 	private JTextArea textArea;  //place the the text is written
 	private KeyboardPanel keyboardPanel;  //place to interact with the keys
 	private JButton copyButton;  //copy results to system clipboard
+	private JButton clearButton;  //copy results to system clipboard
 
 
 	public DragTyperGui(){
@@ -39,11 +40,26 @@ public class DragTyperGui extends JPanel
             }
         });
 
+		clearButton = new JButton("clear");
+		clearButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//Execute when button is pressed
+				System.out.println("cleared");
+				textArea.setText("");
+			}
+		});
+
+
 
 		this.setLayout( new BorderLayout());
         this.add(new JScrollPane(textArea), BorderLayout.NORTH);	
         this.add(keyboardPanel, BorderLayout.CENTER);	
-        this.add(copyButton, BorderLayout.SOUTH);	
+		JPanel buttonPanel = new JPanel();
+
+		buttonPanel.setLayout(new FlowLayout());
+		buttonPanel.add(copyButton);
+		buttonPanel.add(clearButton);
+        this.add(buttonPanel, BorderLayout.SOUTH);	
 		keyboardPanel.requestFocusInWindow();
 	}
 

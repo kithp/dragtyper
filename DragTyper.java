@@ -34,7 +34,7 @@ public class DragTyper{
 			String line;
 			while ((line = reader.readLine()) != null) {
 				//ignore the very small words
-				if (line.length() > 2){
+				if (line.length() >= 2){
 					words.add(line);	
 				}
 			}
